@@ -30,7 +30,7 @@ Lets get started:
     ```
     Found **`robots.txt`** file. That file disclosed the flag and the hint for next challenge. That was easy right?
 
-![IMAGE](/assets/img/posts/hackyholiday2020/day1/day-01-2.png#center)
+![IMAGE](/assets/img/posts/hackyholiday2020/day1/day-01-2.png)
 
 ___
 ## Day 02
