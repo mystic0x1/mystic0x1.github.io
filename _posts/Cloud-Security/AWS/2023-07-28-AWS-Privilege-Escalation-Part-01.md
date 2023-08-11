@@ -2,7 +2,7 @@
 title: Privilege Escalation in AWS - Part 01
 author:
 date: 2023-08-07 22:18:00 +0500
-comments: true
+comments: false
 categories: [Cloud-Security, AWS]
 tags: [cloud security, aws] # TAG names should always be lowercase
 pin: true
@@ -35,8 +35,11 @@ aws iam get-role --role-name privesc1-CreateNewPolicyVersion-role
 ![](/assets/img/posts/aws-priv-esc-01/case-01-01-Get-Role.png)
 _Output of `aws iam get-role --role-name privesc1-CreateNewPolicyVersion-role` command_
 
-> - Remember that these commands are issued in the context of the compromised user who has read-only access.
-> - Also, Please ignore the `date` and `tee` commands in the screenshot, these were just used for keeping track of when a command was executed :)
+> Remember that these commands are issued in the context of the compromised user who has read-only access.
+> 
+> Also, Please ignore the `date` and `tee` commands in the screenshot, these were just used for keeping track of when a command was executed :)
+{: .prompt-info }
+
 
 In the above image, our compromised user is listed under the `principal` property of `AssumedRolePolicyDocument` meaning that this user is allowed to assume the `privesc1-CreateNewPolicyVersion-role`.
 
@@ -83,7 +86,9 @@ aws iam create-policy-version --policy-arn arn:aws:iam::xxxxxxxxxxxx:policy/priv
 ![](/assets/img/posts/aws-priv-esc-01/case-01-03-Create-New-Policy-Version.png)
 _Created new policy version and set it as default_
 
-> - Note the `--set-as-default` flag here. Using this flag, when a new version is created, it is also set as the default version. Otherwise, we will have to change the default version separately and for that, another permission, `iam:SetDefaultPolicyVersion`, is required (**in this case, it is not!**).
+> Note the `--set-as-default` flag here. Using this flag, when a new version is created, it is also set as the default version. Otherwise, we will have to change the default version separately and for that, another permission, `iam:SetDefaultPolicyVersion`, is required (**in this case, it is not!**).
+{: .prompt-info }
+
 
 With this, `privesc1-CreateNewPolicyVersion-role` role (or any resource to which this policy is attached) should have full access in this AWS environment. Just for quick verification, we can get the policy document again for the same policy (but version 2 now):
 
@@ -181,12 +186,14 @@ To exploit this misconfigured policy, we can select a user having the following 
 
 
 > The `get-login-profile` command can be used to verify that an IAM user has a password. The command returns a `NoSuchEntity` error if no password is defined for the user.
+{: .prompt-info }
 
 ```bash
 aws iam create-login-profile --user-name super-user --no-password-reset-required --password 'Passwordone2three!' --profile privesc5
 ```
 
 > The option `--no-password-reset-required` means that when the user logins for the 1st time, they won't have to reset their password.
+{: .prompt-info }
 
 ![](/assets/img/posts/aws-priv-esc-01/case-05-03-Create-Login-Profile.png)
 _Creating console logon for a higher privileged user_

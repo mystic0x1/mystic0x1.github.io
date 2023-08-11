@@ -20,7 +20,7 @@ timezone: Asia/Karachi
 
 title: Mystic0x1 # the main title
 
-tagline: Offensive Security Consultant & Penetration Tester | OSCP and CRTP | Aspiring Red Teamer # it will display as the sub-title
+tagline: Offensive Security Consultant | CREST CRT/CPSA | OSCP | CRTP | Aspiring Red Teamer # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
   Cyber Security Blog. Web Application Security, API Security, Active Directory and Cloud Security.
