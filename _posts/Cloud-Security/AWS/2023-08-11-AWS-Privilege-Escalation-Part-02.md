@@ -1,7 +1,7 @@
 ---
 title: Privilege Escalation in AWS - Part 02
 author:
-date: 2023-08-08 22:00:00 +0500
+date: 2023-08-11 22:40:00 +0500
 comments: false
 categories: [Cloud-Security, AWS]
 tags: [cloud security, aws] # TAG names should always be lowercase
