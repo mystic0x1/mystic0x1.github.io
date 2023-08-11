@@ -49,14 +49,14 @@ aws iam get-role --role-name privesc7-AttachUserPolicy-role
 ![](/assets/img/posts/aws-priv-esc-02/case-07-01-Get-Role.png)
 _Get Details of a specific role_
 
-Our compromised user is listed under the `principal` property which means we can assume this role. Let's find out what this role is capable of. For this, we will list down the attached policies of this role:
+Our compromised user is listed under the `principal` property which means we can assume this role. Let's find out what this role is capable of. For this, we will get the policy document of the policies that are attached to this role:
 
 ```bash
 # list attached policies of a role:
 aws iam list-attached-role-policies --role-name privesc7-AttachUserPolicy-role
 
 # Get policy document of specified policy:
-aws iam get-policy-version --policy-arn arn:aws:iam::xxxxxxxxxxxx:policy/privesc7-Attac hUserPolicy --version-id v1
+aws iam get-policy-version --policy-arn arn:aws:iam::xxxxxxxxxxxx:policy/privesc7-AttachUserPolicy --version-id v1
 ```
 
 ![](/assets/img/posts/aws-priv-esc-02/case-07-02-Get-Policy-Document.png)
@@ -64,16 +64,16 @@ _Get policy document_
 
 > Fawaz, you mentioned managed and inline policies. So what type of policy is this that we just listed, you ask? 
 > 
-> Well this is managed policy. The command `list-attached-role-policies` lists the managed policies that are attached to the specified role.
+> This is managed policy. The command `list-attached-role-policies` lists the managed policies that are attached to the specified role. We can use `list-role-policies` to list the inline policies of a role.
 {: .prompt-tip }
 
 A quick review of the policy document shows that this role has the permission `iam:AttachUserPolicy` over **ALL** Users!
 
 ### Privilege Escalation
-I think you know what you, as an adversary, would do here. Having this permission means this role can attach any managed policy to any user. So we can attach the AWS Managed Policy, [AdministratorAccess](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AdministratorAccess.html) to our compromised user (or any user for that matter) to give them full access.
+I think you know what you, as an adversary, would do here. Having this permission means this role can attach a managed policy to any user. So we can attach the [AdministratorAccess](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AdministratorAccess.html) AWS managed policy to our compromised user (or any user for that matter) to give them full access.
 
 ```bash
-aws iam attach-user-policy --user-name purple --policy-arn arn:aws:iam::aws:policy/AdministratorAccess  --profile privesc7
+aws iam attach-user-policy --user-name pwned --policy-arn arn:aws:iam::aws:policy/AdministratorAccess  --profile privesc7
 ```
 
 ![](/assets/img/posts/aws-priv-esc-02/case-07-03-AttachingUserPolicy.png)
@@ -103,12 +103,12 @@ aws iam get-role --role-name privesc8-AttachGroupPolicy-role
 ![](/assets/img/posts/aws-priv-esc-02/case-08-01-Get-Role.png)
 _Get details of the specified role_
 
-Our next step would be to list down the policy document of the attached policy to see what we can do via this role:
+Our next step would be to get the policy document of the attached policy to see what we can do via this role:
 
 ```bash
 aws iam list-attached-role-policies --role-name privesc8-AttachGroupPolicy-role
 
-aws iam get-policy-version --policy-arn arn:aws:iam::xxxxxxxxxxxx:policy/privesc8-Attac hGroupPolicy --version-id v1
+aws iam get-policy-version --policy-arn arn:aws:iam::xxxxxxxxxxxx:policy/privesc8-AttachGroupPolicy --version-id v1
 ```
 
 ![](/assets/img/posts/aws-priv-esc-02/case-08-02-Get-Policy-Document.png)
@@ -132,7 +132,7 @@ aws iam list-attached-group-policies --group-name privesc8-AttachGroupPolicy-gro
 ![](/assets/img/posts/aws-priv-esc-02/case-08-03-Getting-Details-of-Our-Groups.png)
 _Get details of groups for a specific user_
 
-Our compromised user is part of the `privesc8-AttachGroupPolicy-group` group which does not have any policy attached to them... yet :)
+Our compromised user is part of the `privesc8-AttachGroupPolicy-group` group which does not have any policy attached to it... yet :)
 
 Since we know the group we are part of, let's attach the same old `AdministratorAccess` policy to have full access:
 
@@ -211,7 +211,7 @@ The `iam-PutUserPolicy` allow a principal to add (or update) an inline policy to
 - This user can assume a role that has `IAM-PutUserPolicy` permission for our compromised user or any user that we have access to.
 
 ### Enumeration
-You must be familiar with this phase by now :) Let's start by listing roles to find out which one our compromised user can assume:
+You must be familiar with this phase by now :) Let's start by listing details of the roles to find out which role our compromised user can assume:
 
 ```bash
 aws iam get-role --role-name privesc10-PutUserPolicy-role
@@ -256,7 +256,7 @@ aws iam put-user-policy --user-name privesc10-PutUserPolicy-User --policy-name p
 ![](/assets/img/posts/aws-priv-esc-02/case-10-04-Put-User-Policy.png)
 _Adding inline policy to the specified user_
 
-We have added an inline policy to our user with a custom policy document. The policy document allows full access to the user:
+We have embedded an inline policy to our user with a custom policy document. The policy document allows full access to the user:
 
 ![](/assets/img/posts/aws-priv-esc-02/case-10-05-Admin-Policy-Doc.png)
 _Content of custom admin policy document_
@@ -268,7 +268,7 @@ The `iam-PutGroupPolicy` allow a principal to add (or update) an inline policy t
 
 ### Assumptions
 - We have compromised a user who has read-only access in the target environment.
-- This user can assume a role that has `IAM-PutGroupPolicy` permission for a group of which our compromised user is a member.
+- This user can assume a role that has `IAM-PutGroupPolicy` permission for a group which includes our compromised user as a member.
 
 ### Enumeration
 Verifying the details of the role which our user can assume:
