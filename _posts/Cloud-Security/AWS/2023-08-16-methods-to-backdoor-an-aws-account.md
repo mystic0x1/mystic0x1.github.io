@@ -12,7 +12,7 @@ image:
 
 ## Background
 
-Once an adversary has access to their target's AWS account, one of their preference would be to maintain long term access. The first thing they might try to do is to escalate their privileges to gain full access (administrative). We have already explored different misconfigurations that could allow elevated access in any AWS environment:
+Once an adversary has access to their target's AWS account, one of their preference would be to maintain long term access. The first thing they might try to do is to escalate their privileges to gain full access. We have already explored different misconfigurations that could allow elevated access in any AWS environment:
 
 - [AWS-Privilege-Escalation-Part-01](https://mystic0x1.github.io/posts/AWS-Privilege-Escalation-Part-01/)
 - [AWS-Privilege-Escalation-Part-02](https://mystic0x1.github.io/posts/AWS-Privilege-Escalation-Part-02/)
