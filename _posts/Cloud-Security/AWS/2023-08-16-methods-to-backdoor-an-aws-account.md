@@ -28,7 +28,7 @@ With the stage set, let's jump into the exciting part:
 
 ## Persistence - Access Keys
 
-AWS supports multiple ways for allowing authenticated users to send requests. For GUI, we can use passwords to log in and access the available service. For CLI, AWS provides the `Access Key` that allows a user to make authenticated requests. An `Access Key` consists of two parts, namely `Access Key ID` and `Secret Access Key`.
+AWS supports multiple ways for allowing authenticated users to send requests. For GUI, we can use passwords to log in and access the available services. For CLI, AWS provides the `Access Key` that allows a user to make authenticated requests. An `Access Key` consists of two parts, namely `Access Key ID` and `Secret Access Key`.
 
 > As per AWS docs, a user can have a maximum of **two** access keys active at once.
 {: .prompt-info}
@@ -63,7 +63,7 @@ aws iam list-users
 ![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-03-03-List-Existing-Users.png)
 _Listing users in the current account_
 
-Here, we were selected a user `backdoor-case-03-user`. Next, we will list the active keys of this user, and once we are sure that they only have 1 key right now, we will create another for them and save it for our later use:
+Here, we have selected a user `backdoor-case-03-user`. Next, we will list the active keys of this user, and once we are sure that they only have 1 key right now, we will create another for them and save it for our later use:
 
 ```bash
 # List current access keys of the specified user
@@ -80,7 +80,7 @@ We can save the `Access Key` locally and can use it later on.
 
 
 ## Persistence - Temporary Security Credentials
-[Temporary security credentials](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp.html) are a bit identical to the `Access Keys` we just explored above with some differences. These temporary keys allow access to resources to which the user (for whom we generated temporary access keys) has access.
+[Temporary security credentials](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp.html) are somewhat identical to the `Access Keys` we just explored above. These temporary keys allow access to resources to which the user (for whom we generated temporary access keys) has access.
 
 > As the name suggests, temporary keys are temporary in the sense that they expire automatically as compared to `Access Keys` that must be revoked manually.
 > The duration of temporary access keys ranges from `15` minutes to `36` hours.
@@ -90,14 +90,14 @@ We can save the `Access Key` locally and can use it later on.
 
 ### Tidbits
 - The default expiration is set to 12 hours, so it's better to use the `--duration-seconds` flag to set the expiration to a maximum i.e., 36 hours.
-  - PS: This is intended for adversaries :)
-- It's important to note the permissions of temporary credentials. The temporary credentials have the same permissions as the IAM user, but there are some exceptions:
+  - This is intended for adversaries :)
+- It's important to note the permissions of temporary credentials. The temporary credentials have almost the same permissions except:
   - We cannot call any **IAM API operations** unless MFA authentication information is included in the request.
   - We cannot call any **AWS STS API** except `AssumeRole` or `GetCallerIdentity`.
 
 > The Temporary credentials are independent of long-term credentials ie., `Access Key`. What this mean is that, even if the `Access Key` is revoked, the temporary credentials will keep on working till their expiration!
 >
-> So this gives us (pentester/red-team) some extra time before we lose our complete access to the target environment.
+> So this gives an adversary some extra time before they lose their complete access to the target environment.
 {: .prompt-tip}
 
 
