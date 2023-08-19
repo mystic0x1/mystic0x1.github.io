@@ -117,7 +117,7 @@ Now all we need to do is to export these keys and use them. We can always genera
 ## Persistence - AssumeRole
 An IAM Role is quite the same as an IAM User in the sense that roles have permissions through policies that define what actions a role is allowed to perform. The difference is that a role is **shared**; other resources can `assume` a role when required (provided those resources have permissions) and perform actions as that role. Another difference is that a role does not have long-term credentials (`Access Key`), they only have temporary credentials which are generated when they are assumed.
 
-I just mentioned the term **assuming** the role. Each role has a policy called `Trust Policy` which defines who can assume it (get its temporary credentials). We define this policy while creating a new role or we can update it for the existing roles.
+I just mentioned the term **assuming** the role. Each role has a a `Trust Policy` which defines who can assume it (get its temporary credentials). We define this policy while creating a new role or we can update it for the existing roles.
 
 ### Tidbits
 - As an adversary, since our goal is to create a backdoor in the target account, we should create a new role (we can also use existing roles) while setting the assume-role policy such that we can assume this role from outside of our target account (where this role is created). This is called `cross-account access`.
