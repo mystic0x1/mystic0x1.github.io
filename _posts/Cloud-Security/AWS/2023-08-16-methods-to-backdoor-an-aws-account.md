@@ -111,7 +111,7 @@ aws sts get-session-token --duration-seconds 129600 # 36 hours
 ![](/assets/img/posts/methods-to-backdoor-an-aws-account/02-Create-Temp-Access-Keys.png)
 _Creating temporary access key of current user_
 
-Now all we need to do is to export these keys and use them. We can always generate a new one whenever the current one expires.
+Now all we need to do is to export these keys and use them. We can always generate a set whenever the current one expires.
 
 
 ## Persistence - AssumeRole
