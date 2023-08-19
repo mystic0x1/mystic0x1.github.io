@@ -340,7 +340,7 @@ aws ssm list-command-invocations --command-id "e76fb1b8-xxxx-xxxx-xxxx-710d0d977
 ![](/assets/img/posts/methods-to-backdoor-an-aws-account/case-06-02-SSM-RunCommand-Output.png)
 _Output of our previous commands_
 
-> Here we have used `id;hostname` commands to just print the user details and host name of our target EC2 instance. In an actual scenario, an adversary would use a command that could download a malicious file to this instance and run it, add a cron job to send a reverse shell to them periodically, or simply send the attached role's Keys to the their server.
+> Here we have used `id;hostname` commands to just print the user details and host name of our target EC2 instance. In an actual scenario, an adversary would use a command that could download a malicious file to this instance and run it, add a cron job to send a reverse shell to them periodically, or simply send the attached role's keys to the their server.
 {: .prompt-tip}
 
 
