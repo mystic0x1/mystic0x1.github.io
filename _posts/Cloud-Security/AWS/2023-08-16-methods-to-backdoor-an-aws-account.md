@@ -12,7 +12,7 @@ image:
 
 ## Background
 
-Once an adversary has access to their target's AWS account, one of their preference is to maintain long term access. The first thing they might try to do is to escalate their privileges to gain full access (administrative). We have already explored different misconfigurations that could allow elevated access in any AWS environment:
+Once an adversary has access to their target's AWS account, one of their preference would be to maintain long term access. The first thing they might try to do is to escalate their privileges to gain full access (administrative). We have already explored different misconfigurations that could allow elevated access in any AWS environment:
 
 - [AWS-Privilege-Escalation-Part-01](https://mystic0x1.github.io/posts/AWS-Privilege-Escalation-Part-01/)
 - [AWS-Privilege-Escalation-Part-02](https://mystic0x1.github.io/posts/AWS-Privilege-Escalation-Part-02/)
@@ -39,7 +39,7 @@ AWS supports multiple ways for allowing authenticated users to send requests. Fo
 - Since we have already established that we have elevated access in the environment, so there are no particular permissions required (as we have all ).
   - But it is also important to mention that to create an `Access Key` for a user, only the `iam:CreateAccessKey` is required, so even if we don't have full access to the target account, we can still use this method.
 - Our priority (as an adversary) will be to create an access key for a user who already has elevated privileges in the target account (we don't want to spend time again to elevate our privileges right?).
-  - But, even if we don't have any other option, we can always create new users, and give them admin access. **The possibilities here are endless, use your head!**
+  - But, even if we don't have any other option, we can create new users, and give them admin access. **The possibilities here are endless, use your head!**
 
 <div style="width:100%;height:0;padding-bottom:56%;position:relative;"><iframe src="https://giphy.com/embed/3o7btM5BFkNtIzwm52" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/hbsc-hertha-bsc-berlin-jubel-3o7btM5BFkNtIzwm52">via GIPHY</a></p>
 
